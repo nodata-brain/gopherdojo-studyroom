@@ -29,14 +29,14 @@ func (f *Config) Conv() {
 				return err
 			}
 			defer file.Close()
-			img, err := png.Decode(file)
+			img, err := jpeg.Decode(file)
 			if err != nil {
 				fmt.Printf("not image: %+v  \n", path)
 				return nil
 			}
-			p := strings.Replace(path, ".png", ".jpg", -1)
+			p := strings.Replace(path, ".jpg", ".png", -1)
 			m, err := os.Create(p)
-			err = jpeg.Encode(m, img, nil)
+			err = png.Encode(m, img)
 			if err != nil {
 				return err
 			}
