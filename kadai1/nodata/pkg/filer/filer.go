@@ -2,6 +2,8 @@ package filer
 
 import (
 	"fmt"
+	"image/jpeg"
+	"image/png"
 	"os"
 	"path/filepath"
 )
@@ -20,11 +22,19 @@ func (f *Filer) Filer() {
 			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
 			return err
 		}
-		if info.IsDir() {
-			fmt.Printf("dir name: %+v \n", info.Name())
-		} else {
-			fmt.Printf("file name: %+v \n", info.Name())
+		if !info.IsDir() {
+			file, err := os.Open("./" + path)
+			if err != nil {
+				return err
+			}
+			defer file.Close()
+			img, err := png.Decode(file)
+			if err != nil {
+				fmt.Printf("not image: %+v  \n", path)
+			}
+			fmt.Printf("file byte: %+v \n", img)
 		}
+
 		return nil
 	})
 	if err != nil {
