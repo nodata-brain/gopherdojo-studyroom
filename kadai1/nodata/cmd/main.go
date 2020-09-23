@@ -3,13 +3,13 @@ package main
 import (
 	"flag"
 
-	"kadai1/pkg/filer"
+	"kadai1/pkg/img"
 )
 
 func main() {
 	dir := flag.String("dir", ".", "Search Dir")
 	flag.Parse()
-	f := filer.Filer{}
-	f.SetPath(*dir)
-	f.Filer()
+	i := imgconv.Config{}
+	i.SetPath(*dir)
+	i.Conv()
 }

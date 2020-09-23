@@ -1,4 +1,4 @@
-package filer
+package imgconv
 
 import (
 	"fmt"
@@ -6,24 +6,25 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-type Filer struct {
+type Config struct {
 	Path string
 }
 
-func (f *Filer) SetPath(path string) {
+func (f *Config) SetPath(path string) {
 	f.Path = path
 }
 
-func (f *Filer) Filer() {
+func (f *Config) Conv() {
 	err := filepath.Walk(f.Path, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			fmt.Printf("prevent panic by handling failure accessing a path %q: %v\n", path, err)
 			return err
 		}
 		if !info.IsDir() {
-			file, err := os.Open("./" + path)
+			file, err := os.Open(path)
 			if err != nil {
 				return err
 			}
@@ -31,8 +32,16 @@ func (f *Filer) Filer() {
 			img, err := png.Decode(file)
 			if err != nil {
 				fmt.Printf("not image: %+v  \n", path)
+				return nil
 			}
-			fmt.Printf("file byte: %+v \n", img)
+			p := strings.Replace(path, ".png", ".jpg", -1)
+			m, err := os.Create(p)
+			err = jpeg.Encode(m, img, nil)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("create: %s  \n", path)
+
 		}
 
 		return nil
@@ -40,5 +49,4 @@ func (f *Filer) Filer() {
 	if err != nil {
 		fmt.Printf("error:%s", err)
 	}
-
 }
